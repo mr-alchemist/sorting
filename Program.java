@@ -9,108 +9,89 @@ public class Program {
 		//program.run();
 		//System.out.println("");
 		
-		program.runTest();
+		program.runPerfomanceTest();
 	}
 	
 	void run() {
-		int[] arr = new int[100000];
+		int[] arr = new int[10_000_000];
 		fillArrayRandom(arr);
 		System.out.println("isSorted: "+ isSorted(arr));
 		System.out.println("sum: "+ getSum(arr));
 		System.out.println("sorting...");
-		//bubbleSortArrayOpti();
-		//shakerSortArray();
-		//selectionSortArray();
-		//insertionSortArray();
-		shellSortArray2(arr);
+		Sorting.mergeSort(arr);
 		System.out.println("isSorted: "+ isSorted(arr));
 		System.out.println("sum: "+ getSum(arr));
 	}
 	
-	void runTest() {
+	void runPerfomanceTest() {
 		System.out.println("size;insertion(full);insertion(10%);insertion(5);shell(full);shell(10%);shell(5);shell_hibbard(full);shell_hibbard(10%);shell_hibbard(5);");
-		int size = 20;
-		while(size <= 2000_000) {
-			int[] testArray = new int[size];
+		int size = 1000;
+		while(size <= 2500_000) {
+			
+			int[] orderedArray = new int[size];
+			fillArrayOrdered(orderedArray);
+			
+			int[] fullyShuffledArray = new int[size];
+			System.arraycopy(orderedArray, 0, fullyShuffledArray, 0, orderedArray.length);
+			shuffleArray(fullyShuffledArray);
+			
+			int[] shuffledArray10perc = new int[size];
+			System.arraycopy(orderedArray, 0, shuffledArray10perc, 0, orderedArray.length);
+			shuffleArray(shuffledArray10perc,shuffledArray10perc.length/10);
+			
+			int[] shuffledArray5items = new int[size];
+			System.arraycopy(orderedArray, 0, shuffledArray5items, 0, orderedArray.length);
+			shuffleArray(shuffledArray5items, 5);
+			
+			
 			System.out.print(size + ";");
-			TestSort1(testArray, true);
-			TestSort2(testArray, false);
-			TestSort3(testArray, false);
+			
+			int[] testArray = new int[size];
+			
+			for(int i = 0; i < 7; i++) {
+				System.arraycopy(fullyShuffledArray, 0, testArray, 0, fullyShuffledArray.length);
+				testSort(testArray, i);
+				System.arraycopy(shuffledArray10perc, 0, testArray, 0, shuffledArray10perc.length);
+				testSort(testArray, i);
+				System.arraycopy(shuffledArray5items, 0, testArray, 0, shuffledArray5items.length);
+				testSort(testArray, i);
+			}
+			
 			System.out.println("");
 			
 			size += size;
 		}
 	}
 	
-	void TestSort1(int[] array, boolean fillArray){
-		if(fillArray) {
-			fillArrayOrdered(array);
-		}
-		
-		shuffleArray(array);
-		
-		Stopwatch sw = new Stopwatch();
-		
-		sw.start();
-		insertionSortArray(array);
-		System.out.print(sw.getDuration() + ";");
-		
-		shuffleArray(array, array.length/10);
-		sw.start();
-		insertionSortArray(array);
-		System.out.print(sw.getDuration() + ";");
-		
-		shuffleArray(array, 5);
-		sw.start();
-		insertionSortArray(array);
-		System.out.print(sw.getDuration() + ";");
-	}
 	
-	void TestSort2(int[] array, boolean fillArray){
-		if(fillArray) {
-			fillArrayOrdered(array);
+	void testSort(int[] array, int sortMethod) {
+		Stopwatch sw = new Stopwatch();
+		sw.start();
+		
+		switch(sortMethod) {
+			case 0:
+				Sorting.insertionSort(array);
+				break;
+			case 1:
+				Sorting.shellSort(array);
+				break;
+			case 2:
+				Sorting.shellSort2(array);
+				break;
+			case 3:
+				Sorting.mergeSort(array);
+				break;
+			case 4:
+				Sorting.mergeSortOpti(array, 32);
+				break;
+			case 5:
+				Sorting.mergeSortOpti(array, 64);
+				break;
+			case 6:
+				Sorting.mergeSortOpti(array, 128);
+				break;
 		}
 		
-		shuffleArray(array);
-		
-		Stopwatch sw = new Stopwatch();
-		
-		sw.start();
-		shellSortArray(array);
-		System.out.print(sw.getDuration() + ";");
-		
-		shuffleArray(array, array.length/10);
-		sw.start();
-		shellSortArray(array);
-		System.out.print(sw.getDuration() + ";");
-		
-		shuffleArray(array, 5);
-		sw.start();
-		shellSortArray(array);
-		System.out.print(sw.getDuration() + ";");
-	}
-	
-	void TestSort3(int[] array, boolean fillArray){
-		if(fillArray) {
-			fillArrayOrdered(array);
-		}
-		
-		shuffleArray(array);
-		
-		Stopwatch sw = new Stopwatch();
-		
-		sw.start();
-		shellSortArray2(array);
-		System.out.print(sw.getDuration() + ";");
-		
-		shuffleArray(array, array.length/10);
-		sw.start();
-		shellSortArray2(array);
-		System.out.print(sw.getDuration() + ";");
-		
-		shuffleArray(array, 5);
-		sw.start();
-		shellSortArray2(array);
 		System.out.print(sw.getDuration() + ";");
 	}
 	
@@ -171,173 +152,6 @@ public class Program {
 		} 
 		return true;
 	}
-	
-	void bubbleSortArray(int[] array) {
-		
-		for(int j = array.length - 1; j > 0 ; j--) { 
-			for(int i = 0; i < j; i++) {
-				if(array[i] > array[i+1]) {
-					int c = array[i];
-					array[i] = array[i+1];
-					array[i+1] = c;
-				}
-			} 
-		}
-	}
-	
-	void bubbleSortArray_(int[] array) {
-		
-		for(int j = array.length - 1; j >= 1 ; j--) { 
-			for(int i = 1; i <= j; i++) {
-				if( array[i] < array[i-1]) {
-					int c = array[i-1];
-					array[i-1] = array[i];
-					array[i] = c;
-				}
-			}
-		}
-	}
-	
-	void bubbleSortArrayOpti(int[] array) {
-		
-		for(int j = array.length - 1; j > 0 ; j--) { 
-			boolean wasSwap = false;
-			for(int i = 0; i < j; i++) {
-				
-				if(array[i] > array[i+1]) {
-					int c = array[i];
-					array[i] = array[i+1];
-					array[i+1] = c;
-					wasSwap = true;
-				}
-			} 
-			if(!wasSwap)
-				return;
-		}
-	}
-	
-	void shakerSortArray(int[] array) {
-		int l = 0;
-		int r = array.length - 1;
-		
-		while(l < r) {
-			boolean wasSwap = false;
-			for(int i = l; i < r; i++) {//bubble to right
-				if(array[i] > array[i+1]) {
-					int c = array[i];
-					array[i] = array[i+1];
-					array[i+1] = c;
-					wasSwap = true;
-				}
-			}
-			r--;
-			if(!wasSwap)break;
-			if(l >= r)break;
-			wasSwap = false;
-			for(int i = r; i > l; i--) {//bubble to left
-				if(array[i] < array[i-1]) {
-					int c = array[i];
-					array[i] = array[i-1];
-					array[i-1] = c;
-					wasSwap = true;
-				}
-			}
-			l++;
-			if(!wasSwap)break;
-		}
-		
-	}
-	
-	void selectionSortArray(int[] array) {
-		for(int l = 0; l < array.length-1;l++) {
-			int min = array[l];
-			int minIndex = l;
-			for(int i = l+1; i < array.length; i++) {
-				if(array[i] < min) {
-					min = array[i];
-					minIndex = i;
-				}
-			}
-			if(minIndex != l) {
-				int c = array[l];
-				array[l] = array[minIndex];
-				array[minIndex] = c;
-			}
-		}
-		
-	}
-	
-	void insertionSortArray(int[] array) {
-		if (array.length <= 1) return;
-		
-		for(int i = 1; i < array.length; i++) {
-			int key = array[i];
-			int j = i - 1;
-			while(j >= 0 && array[j] > key ) {
-				array[j+1] = array[j];
-				j--;
-			}
-			array[j+1] = key;
-		}
-	}
-	
-	//Сортировка Шелла. Взята последовательность шагов, предложенная Шеллом
-	void shellSortArray(int[] array) {
-		int n = array.length;
-		if (n <= 1) return;
-		
-		int gap = n / 2;//последовательность, предложенная Шеллом
-		while(gap >= 1) {
-			for(int k = 0;k < gap;k++) {
-				for(int i = k + gap; i < n; i+= gap) {//sort subsequence
-					int key = array[i];
-					int j = i - gap;
-					while(j >= 0 && array[j] > key ) {
-						array[j + gap] = array[j];
-						j -= gap;
-					}
-					array[j + gap] = key;
-				}
-			}
-			gap = gap / 2;
-		}
-		
-	}
-	
-	//Сортировка Шелла и использованием последовательности шагов, предолженной Хиббардом
-	void shellSortArray2(int[] array) {
-		int n = array.length;
-		if (n <= 1) return;
-		
-		int exp2 = 2;
-		while(exp2 <= n) {
-			exp2 += exp2;
-		}
-		exp2 = exp2/2;
-		
-		//System.out.println("exp2: " + exp2);
-		
-		int gap = exp2 - 1;
-		
-		while(gap >= 1) {
-			//System.out.println("gap: " + gap);
-			for(int k = 0;k < gap;k++) {
-				for(int i = k + gap; i < n; i+= gap) {//sort subsequence
-					int key = array[i];
-					int j = i - gap;
-					while(j >= 0 && array[j] > key ) {
-						array[j + gap] = array[j];
-						j -= gap;
-					}
-					array[j + gap] = key;
-				}
-			}
-			exp2 = exp2 / 2;
-			gap = exp2 - 1;
-		}
-		
-	}
-	
 	
 	
 }
