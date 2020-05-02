@@ -1,5 +1,4 @@
 
-
 public class Program {
 	
 	public static void main(String[] args) {
@@ -8,7 +7,6 @@ public class Program {
 		Program program = new Program();
 		//program.run();
 		//System.out.println("");
-		
 		program.runPerfomanceTest();
 	}
 	
@@ -24,7 +22,7 @@ public class Program {
 	}
 	
 	void runPerfomanceTest() {
-		System.out.println("size;insertion(full);insertion(10%);insertion(5);shell(full);shell(10%);shell(5);shell_hibbard(full);shell_hibbard(10%);shell_hibbard(5);");
+		System.out.println("size;insertion(full);insertion(10%);insertion(5);shell(full);shell(10%);shell(5);shell_hibbard(full);shell_hibbard(10%);shell_hibbard(5);merge(full);merge(10%);merge(5);tim(32)(full);tim(32)(10%);tim(32)(5);tim(64)(full);tim(64)(10%);tim(64)(5);tim(128)(full);tim(128)(10%);tim(128)(5);counting(full);counting(10%);counting(5);");
 		int size = 1000;
 		while(size <= 2500_000) {
 			
@@ -48,7 +46,7 @@ public class Program {
 			
 			int[] testArray = new int[size];
 			
-			for(int i = 0; i < 7; i++) {
+			for(int i = 0; i < 8; i++) {
 				System.arraycopy(fullyShuffledArray, 0, testArray, 0, fullyShuffledArray.length);
 				testSort(testArray, i);
 				System.arraycopy(shuffledArray10perc, 0, testArray, 0, shuffledArray10perc.length);
@@ -90,6 +88,10 @@ public class Program {
 			case 6:
 				Sorting.mergeSortOpti(array, 128);
 				break;
+			case 7:
+				Sorting.countingSort(array, array.length + 1);
+				break;
+			
 		}
 		
 		System.out.print(sw.getDuration() + ";");
@@ -101,9 +103,7 @@ public class Program {
 		}
 	}
 	
-	void shuffleArray(int[] array) {
-		shuffleArray(array, array.length);
-	}
+	
 	
 	void shuffleArray(int[] array, int n) {
 		for(int i = 0; i < n; i++) {
@@ -152,6 +152,19 @@ public class Program {
 		} 
 		return true;
 	}
+	
+	void shuffleArray(int[] array) {
+		shuffleArray(array, array.length);
+	}
+	
+	/*void shuffleArray(int[] array) {
+		for(int i = 0; i < array.length; i++) {
+			int j = (int)(Math.random()*array.length);
+			int buf = array[i];
+			array[i] = array[j];
+			array[j] = buf;
+		}
+	}*/
 	
 	
 }

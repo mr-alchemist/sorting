@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Sorting {
 	public static void mergeSort(int[] array) {
@@ -9,7 +10,7 @@ public class Sorting {
 	private static void splitMerge(int[] copy, int begin, int end, int[] array) {
 		if (end - begin < 2)
 			return;
-		int middle = (begin + end) / 2;
+		int middle = begin + (end - begin) / 2;
 		splitMerge(array, begin, middle, copy);
 		splitMerge(array, middle, end, copy);
 		merge(copy, begin, middle, end, array);
@@ -46,7 +47,7 @@ public class Sorting {
 			return;
 		}
 		
-		int middle = (begin + end) / 2;
+		int middle = begin + (end - begin) / 2;
 		splitMergeOpti(array, begin, middle, copy, minrun);
 		splitMergeOpti(array, middle, end, copy, minrun);
 		merge(copy, begin, middle, end, array);
@@ -209,6 +210,19 @@ public class Sorting {
 		}
 		
 	}
-
+	
+	public static void countingSort(int[] array, int k) { //array[i] in [0..k)
+		int[] C = new int[k];
+		Arrays.fill(C, 0);
+		for(int i = 0; i < array.length; i++) 
+			C[array[i]]++;
+		
+		int j = 0;
+		for(int x = 0; x < k; x++)
+			for(int i = 0; i < C[x]; i++) 
+				array[j++] = x;
+		
+		
+	}
 }
 
