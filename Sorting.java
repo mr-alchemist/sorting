@@ -73,44 +73,20 @@ public class Sorting {
 	
 	//Сортировка Шелла. Взята последовательность шагов, предложенная Шеллом
 	public static void shellSort(int[] array) {
-		int n = array.length;
-		if (n <= 1) return;
-		
-		int gap = n / 2;//последовательность, предложенная Шеллом
-		while(gap >= 1) {
-			for(int k = 0;k < gap;k++) {
-				for(int i = k + gap; i < n; i+= gap) {//sort subsequence
-					int key = array[i];
-					int j = i - gap;
-					while(j >= 0 && array[j] > key ) {
-						array[j + gap] = array[j];
-						j -= gap;
-					}
-					array[j + gap] = key;
-				}
-			}
-			gap = gap / 2;
-		}
-		
+		shellSort(array, new ShellGapSequence(array.length));
 	}
 	
-	//Сортировка Шелла с использованием последовательности шагов, предолженной Хиббардом
+	//Сортировка Шелла с использованием последовательности шагов, предложенной Хиббардом
 	public static void shellSort2(int[] array) {
+		shellSort(array, new HibbardGapSequence(array.length));
+	}
+	
+	public static void shellSort(int[] array, GapSequenceIterator gapIterator) {
 		int n = array.length;
 		if (n <= 1) return;
 		
-		int exp2 = 2;
-		while(exp2 <= n) {
-			exp2 += exp2;
-		}
-		exp2 = exp2/2;
-		
-		//System.out.println("exp2: " + exp2);
-		
-		int gap = exp2 - 1;
-		
+		int gap = gapIterator.next();
 		while(gap >= 1) {
-			//System.out.println("gap: " + gap);
 			for(int k = 0;k < gap;k++) {
 				for(int i = k + gap; i < n; i+= gap) {//sort subsequence
 					int key = array[i];
@@ -122,8 +98,7 @@ public class Sorting {
 					array[j + gap] = key;
 				}
 			}
-			exp2 = exp2 / 2;
-			gap = exp2 - 1;
+			gap = gapIterator.next();
 		}
 		
 	}
