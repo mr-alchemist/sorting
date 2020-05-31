@@ -16,7 +16,7 @@ public class Program {
 		System.out.println("isSorted: "+ isSorted(arr));
 		System.out.println("sum: "+ getSum(arr));
 		System.out.println("sorting...");
-		Sorting.mergeSort(arr);
+		Sorting.shellSort2(arr);
 		System.out.println("isSorted: "+ isSorted(arr));
 		System.out.println("sum: "+ getSum(arr));
 	}
