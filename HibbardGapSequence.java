@@ -1,5 +1,5 @@
 
-public class HibbardGapSequence implements GapSequenceIterator {
+public class HibbardGapSequence implements GapSequence {
 	int exp2;
 	public HibbardGapSequence(int n) {
 		exp2 = 2;

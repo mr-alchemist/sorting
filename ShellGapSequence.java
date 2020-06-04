@@ -1,5 +1,5 @@
 
-public class ShellGapSequence implements GapSequenceIterator {//последовательность, предложенная Шеллом
+public class ShellGapSequence implements GapSequence {//последовательность, предложенная Шеллом
 	private int current;
 	public ShellGapSequence(int n) {
 		current = n;

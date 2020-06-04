@@ -81,11 +81,11 @@ public class Sorting {
 		shellSort(array, new HibbardGapSequence(array.length));
 	}
 	
-	public static void shellSort(int[] array, GapSequenceIterator gapIterator) {
+	public static void shellSort(int[] array, GapSequence gapSequence) {
 		int n = array.length;
 		if (n <= 1) return;
 		
-		int gap = gapIterator.next();
+		int gap = gapSequence.next();
 		while(gap >= 1) {
 			for(int k = 0;k < gap;k++) {
 				for(int i = k + gap; i < n; i+= gap) {//sort subsequence
@@ -98,7 +98,7 @@ public class Sorting {
 					array[j + gap] = key;
 				}
 			}
-			gap = gapIterator.next();
+			gap = gapSequence.next();
 		}
 		
 	}
